@@ -7,10 +7,9 @@ Ini adalah proyek simulasi mesin pencari berbasis web yang saya bangun menggunak
   - 🔍 **Pencarian Lanjutan**: Peringkat relevansi berbasis BM25 yang diterapkan pada beberapa field dokumen (judul, abstrak, kata kunci).
   - ✨ **Koreksi Typo**: Koreksi kesalahan ketik secara otomatis saat pengguna mencari, menggunakan algoritma Levenshtein Distance.
   - 🎯 **Penggabungan Skor RRF**: Menggabungkan skor relevansi dari setiap field untuk menghasilkan peringkat akhir yang lebih akurat.
-  - 🌐 **Antarmuka Web Sederhana**: Tampilan antarmuka yang bersih dan fungsional untuk memudahkan penggunaan.
-  - 📊 **Statistik**: Menampilkan statistik penggunaan mesin pencari secara *real-time*.
+  - 🌐 **UI Web Sederhana**: Tampilan UI untuk memudahkan penggunaan.
   - 📄 **Tampilan Dokumen**: Halaman khusus untuk melihat detail lengkap dari sebuah dokumen.
-  - 🔌 **Endpoint API**: Menyediakan RESTful API untuk akses terprogram ke fungsi pencarian.
+  - 🔌 **Endpoint API**: Menyediakan RESTful API untuk akses  ke fungsi pencarian.
 
 ## Cara Menjalankan
 
@@ -100,7 +99,7 @@ Alur kerja mesin pencari ini dibagi menjadi beberapa tahap:
 Mesin pencari ini menggunakan dataset **INSPEC** dari Hugging Face, yang berisi:
 
   - Dokumen-dokumen ilmiah dengan judul, abstrak, dan kata kunci.
-  - Lebih dari 1.000 dokumen untuk pengujian.
+  - 2000 jumlah dokumen.
   - Topik seputar ilmu komputer dan teknik.
 
 ## Struktur Proyek
@@ -127,7 +126,6 @@ Information retrieaval/
   - **Framework**: FastAPI dengan template Jinja2
   - **Algoritma Pencarian**: BM25 dengan RRF
   - **Koreksi Typo**: Levenshtein Distance
-  - **UI**: HTML/CSS/JS sederhana tanpa framework eksternal
   - **Sumber Data**: Pustaka `datasets` dari Hugging Face
 
 ## Konfigurasi
