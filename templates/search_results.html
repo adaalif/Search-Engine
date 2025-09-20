@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - {{ query }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Search Results</h2>
+            <a href="/" class="back-btn">← Back to Search</a>
+        </div>
+        
+        <form method="post" action="/search" class="search-form">
+            <input type="text" 
+                   name="query" 
+                   class="search-input" 
+                   value="{{ query }}"
+                   placeholder="Enter search query..."
+                   required>
+            <select name="top_n" class="results-select">
+                <option value="5" {% if total_results <= 5 %}selected{% endif %}>5 results</option>
+                <option value="10" {% if total_results == 10 %}selected{% endif %}>10 results</option>
+                <option value="20" {% if total_results == 20 %}selected{% endif %}>20 results</option>
+            </select>
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+        
+        <!-- Typo Corrections -->
+        {% if results and results[0].corrections %}
+        <div class="corrections">
+            <h6>Typo Corrections Made:</h6>
+            {% for correction in results[0].corrections %}
+                <span class="correction-badge">{{ correction }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Results Summary -->
+        <div class="results-summary">
+            Found <strong>{{ total_results }}</strong> results for "<strong>{{ query }}</strong>"
+        </div>
+        
+        <!-- Search Results -->
+        {% if results %}
+            {% for result in results %}
+            <div class="result-item">
+                <div class="result-header">
+                    <h3 class="result-title">{{ result.title }}</h3>
+                    <span class="result-score">{{ "%.4f"|format(result.score) }}</span>
+                </div>
+                
+                <div class="result-abstract">
+                    {{ result.abstract[:300] }}{% if result.abstract|length > 300 %}...{% endif %}
+                </div>
+                
+                {% if result.keyphrases and result.keyphrases != 'N/A' %}
+                <div class="keyphrases">
+                    <h6>Keyphrases:</h6>
+                    {% for keyphrase in result.keyphrases[:8] %}
+                        <span class="keyphrase-tag">{{ keyphrase }}</span>
+                    {% endfor %}
+                    {% if result.keyphrases|length > 8 %}
+                        <span style="color: #666;">... and {{ result.keyphrases|length - 8 }} more</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+                <div class="result-actions">
+                    <a href="/document/{{ result.id }}" class="view-doc-btn">View Full Document</a>
+                    <span class="doc-id">ID: {{ result.id }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-results">
+                <h3>No results found</h3>
+                <p>Try adjusting your search query or check for typos.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

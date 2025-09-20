@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Search Engine</h1>
+        
+        <form method="post" action="/search" class="search-form">
+            <input type="text" 
+                   name="query" 
+                   class="search-input" 
+                   placeholder="Enter search query..."
+                   required>
+            <select name="top_n" class="results-select">
+                <option value="5">5 results</option>
+                <option value="10" selected>10 results</option>
+                <option value="20">20 results</option>
+            </select>
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

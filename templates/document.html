@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document {{ doc.id }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Document Details</h2>
+            <a href="javascript:history.back()" class="back-btn">← Back</a>
+        </div>
+        
+        <h1 class="doc-title">{{ doc.title }}</h1>
+        
+        
+        <div class="section">
+            <h3 class="section-title">Abstract</h3>
+            <div class="abstract-text">{{ doc.abstract }}</div>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">Keyphrases</h3>
+            <div class="keyphrases-container">
+                {% for keyphrase in doc.keyphrases %}
+                    <span class="keyphrase-tag">{{ keyphrase }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="javascript:history.back()" class="btn">← Back to Results</a>
+            <a href="/" class="btn">🏠 New Search</a>
+        </div>
+    </div>
+</body>
+</html>
