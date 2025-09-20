@@ -8,7 +8,7 @@ Sistem ini mengimplementasikan pipeline Information Retrieval yang komprehensif 
 4. **Query Processing** - Preprocessing dan koreksi typo otomatis
 5. **Reciprocal Rank Fusion (RRF)** - Penggabungan skor dari multiple ranking systems
 6. **Clustering-based Relevance Boosting** - Peningkatan relevansi berdasarkan cluster similarity
-7. **Web Interface & API** - Antarmuka pengguna dan RESTful API
+7. **Web Interface & API** - UI pengguna dan RESTful API
 
 ## 🚀 Fitur Utama
 
@@ -62,13 +62,11 @@ Sistem ini mengimplementasikan pipeline Information Retrieval yang komprehensif 
 
 ## Cara Penggunaan
 
-### Antarmuka Web
+### UI Web
 
 1.  **Mencari**: Masukkan query Anda pada kotak pencarian yang tersedia.
 2.  **Lihat Hasil**: Hasil pencarian akan ditampilkan dalam daftar yang sudah diperingkat.
 3.  **Lihat Dokumen**: Klik tombol "Lihat Dokumen Lengkap" untuk membaca konten penuh.
-4.  **Statistik**: Cek statistik mesin pencari di halaman utama.
-
 ### Endpoint API
 
   - `GET /` - Halaman utama.
