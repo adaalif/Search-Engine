@@ -259,12 +259,43 @@ Information retrieaval/
         └── main.js
 ```
 
-## Detail Teknis
+## 📈 Evaluasi dan Analisis Performa
 
-  - **Framework**: FastAPI dengan template Jinja2
-  - **Algoritma Pencarian**: BM25 dengan RRF
-  - **Koreksi Typo**: Levenshtein Distance
-  - **Sumber Data**: Pustaka `datasets` dari Hugging Face
+### Metrik Evaluasi
+- **Precision@K**: Akurasi hasil pencarian pada K dokumen teratas
+- **Recall**: Kemampuan sistem menemukan dokumen relevan
+- **F1-Score**: Harmonic mean dari precision dan recall
+- **Silhouette Score**: Kualitas clustering (range: -1 to 1, higher is better)
+- **Query Response Time**: Waktu rata-rata untuk memproses query
+
+### Analisis Clustering
+- **Cluster Distribution**: Analisis distribusi dokumen dalam setiap cluster
+- **Cluster Coherence**: Konsistensi tematik dalam setiap cluster
+- **Inter-cluster Similarity**: Kemiripan antar cluster
+- **Intra-cluster Similarity**: Kemiripan dalam cluster
+
+### Benchmarking
+- **Baseline Comparison**: Perbandingan dengan pencarian tanpa clustering
+- **RRF Effectiveness**: Analisis efektivitas Reciprocal Rank Fusion
+- **Typo Correction Accuracy**: Akurasi koreksi kesalahan ketik
+- **Multi-field Integration**: Kontribusi setiap field terhadap relevansi
+
+## 🔬 Detail Teknis
+
+### Core Algorithms
+- **BM25 Ranking**: Okapi BM25 dengan parameter k1=1.2, b=0.75
+- **Reciprocal Rank Fusion**: Formula `score = 1/(k + rank)` dengan k=60
+- **K-Means Clustering**: Euclidean distance dengan random initialization
+- **TF-IDF Vectorization**: Term frequency-inverse document frequency weighting
+- **Levenshtein Distance**: Edit distance untuk typo correction
+
+### Dependencies
+- **Framework**: FastAPI dengan template Jinja2
+- **Machine Learning**: scikit-learn untuk clustering dan vectorization
+- **NLP Processing**: NLTK untuk text preprocessing
+- **Distance Calculation**: python-Levenshtein untuk typo correction
+- **BM25 Implementation**: rank-bm25 untuk ranking algorithm
+- **Data Source**: Hugging Face datasets untuk corpus
 
 ## Konfigurasi
 
@@ -286,6 +317,41 @@ Beberapa parameter bisa diubah langsung di dalam kode `main.py`:
     uvicorn.run(app, host="0.0.0.0", port=8001)
     ```
 
-## Lisensi
+## 🎯 Kesimpulan
 
-Proyek ini dibuat untuk tujuan edukasi. Dataset INSPEC digunakan di bawah lisensi masing-masing.
+Sistem Information Retrieval ini berhasil mengimplementasikan pipeline pencarian yang komprehensif dengan menggabungkan multiple ranking algorithms, document clustering, dan advanced query processing. Kombinasi BM25 dengan RRF dan clustering-based boosting menghasilkan sistem pencarian yang lebih akurat dan relevan dibandingkan dengan pendekatan tradisional.
+
+### Keunggulan Sistem
+1. **Multi-field Search**: Pencarian simultan di title, abstract, dan keyphrases
+2. **Intelligent Ranking**: RRF menggabungkan skor dari multiple ranking systems
+3. **Document Clustering**: Pengelompokan dokumen untuk meningkatkan relevansi
+4. **Typo Tolerance**: Koreksi otomatis kesalahan ketik pengguna
+5. **Scalable Architecture**: Arsitektur yang dapat dikembangkan untuk dataset yang lebih besar
+
+### Potensi Pengembangan
+- **Query Expansion**: Penambahan sinonim dan related terms
+- **Learning to Rank**: Implementasi machine learning untuk ranking
+- **Real-time Clustering**: Update cluster secara real-time
+- **Multi-language Support**: Dukungan untuk multiple bahasa
+- **Advanced Analytics**: Dashboard analisis performa sistem
+
+## 📚 Referensi
+
+### Academic Papers
+- Robertson, S., & Zaragoza, H. (2009). The probabilistic relevance framework: BM25 and beyond. *Foundations and Trends in Information Retrieval*, 3(4), 333-389.
+- Cormack, G. V., Clarke, C. L., & Buettcher, S. (2009). Reciprocal rank fusion outperforms condorcet and individual rank learning methods. *Proceedings of the 32nd international ACM SIGIR conference on Research and development in information retrieval*.
+- MacQueen, J. (1967). Some methods for classification and analysis of multivariate observations. *Proceedings of the fifth Berkeley symposium on mathematical statistics and probability*.
+
+### Technical Documentation
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [scikit-learn Clustering](https://scikit-learn.org/stable/modules/clustering.html)
+- [NLTK Documentation](https://www.nltk.org/)
+- [Hugging Face Datasets](https://huggingface.co/docs/datasets/)
+
+## 📄 Lisensi
+
+Proyek ini dibuat untuk tujuan edukasi dan penelitian. Dataset INSPEC digunakan di bawah lisensi masing-masing. Kode sumber tersedia untuk pembelajaran dan pengembangan lebih lanjut.
+
+---
+
+**Dibuat dengan ❤️ untuk pembelajaran Information Retrieval dan Machine Learning**
