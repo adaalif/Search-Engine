@@ -4,12 +4,12 @@ Ini adalah proyek simulasi mesin pencari berbasis web yang saya bangun menggunak
 
 ## Fitur Utama
 
-  - 🔍 **Pencarian Lanjutan**: Peringkat relevansi berbasis BM25 yang diterapkan pada beberapa field dokumen (judul, abstrak, kata kunci).
-  - ✨ **Koreksi Typo**: Koreksi kesalahan ketik secara otomatis saat pengguna mencari, menggunakan algoritma Levenshtein Distance.
-  - 🎯 **Penggabungan Skor RRF**: Menggabungkan skor relevansi dari setiap field untuk menghasilkan peringkat akhir yang lebih akurat.
-  - 🌐 **UI Web Sederhana**: Tampilan UI untuk memudahkan penggunaan.
-  - 📄 **Tampilan Dokumen**: Halaman khusus untuk melihat detail lengkap dari sebuah dokumen.
-  - 🔌 **Endpoint API**: Menyediakan RESTful API untuk akses  ke fungsi pencarian.
+  -  **Pencarian Lanjutan Multi-Field-BM25**: Peringkat relevansi berbasis BM25 yang diterapkan pada beberapa field dokumen (judul, abstrak, kata kunci).
+  -  **Koreksi Typo**: Koreksi kesalahan ketik secara otomatis saat pengguna mencari, menggunakan algoritma Levenshtein Distance.
+  -  **Penggabungan Skor RRF**: Menggabungkan skor relevansi dari setiap field untuk menghasilkan peringkat akhir yang lebih akurat.
+  -  **UI Web Sederhana**: Tampilan UI untuk memudahkan penggunaan.
+  -  **Tampilan Dokumen**: Halaman khusus untuk melihat detail lengkap dari sebuah dokumen.
+  -  **Endpoint API**: Menyediakan RESTful API untuk akses  ke fungsi pencarian.
 
 ## Cara Menjalankan
 
