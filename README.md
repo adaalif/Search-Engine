@@ -7,7 +7,7 @@ Sistem ini mengimplementasikan pipeline Information Retrieval yang komprehensif 
 3. **Document Clustering** - Pengelompokan dokumen menggunakan K-Means dengan TF-IDF
 4. **Query Processing** - Preprocessing dan koreksi typo otomatis
 5. **Reciprocal Rank Fusion (RRF)** - Penggabungan skor dari multiple ranking systems
-6. **Clustering-based Relevance Boosting** - Peningkatan relevansi berdasarkan cluster similarity
+6. **Clustering-based Relevance** - Peningkatan relevansi berdasarkan cluster similarity
 7. **Web Interface & API** - UI pengguna dan RESTful API
 
 ## 🚀 Fitur Utama
@@ -16,7 +16,7 @@ Sistem ini mengimplementasikan pipeline Information Retrieval yang komprehensif 
 - **Multi-Field BM25 Ranking**: Implementasi BM25 untuk title, abstract, dan keyphrases dengan scoring terpisah
 - **Document Clustering**: Pengelompokan dokumen menggunakan K-Means clustering dengan TF-IDF vectorization
 - **Reciprocal Rank Fusion (RRF)**: Penggabungan skor dari multiple ranking systems untuk hasil yang lebih akurat
-- **Clustering-based Relevance Boosting**: Peningkatan skor relevansi untuk dokumen dalam cluster yang relevan
+- **Clustering-based Relevance**: Peningkatan skor relevansi untuk dokumen dalam cluster yang relevan
 - **Automatic Typo Correction**: Koreksi kesalahan ketik menggunakan Levenshtein Distance algorithm
 
 ### Advanced Features
@@ -215,7 +215,7 @@ Mesin pencari ini menggunakan dataset **INSPEC** dari Hugging Face, yang berisi:
 ### Data Flow
 ```
 User Query → Typo Correction → Preprocessing → Multi-field BM25 Search → 
-RRF Score Fusion → Clustering Boost → Ranked Results → Web Display
+RRF Score Fusion → Clustering → Ranked Results → Web Display
 ```
 
 ## 🔧 Konfigurasi Sistem
@@ -313,7 +313,7 @@ Beberapa parameter bisa diubah langsung di dalam kode `main.py`:
 
 ## 🎯 Kesimpulan
 
-Sistem Information Retrieval ini berhasil mengimplementasikan pipeline pencarian yang komprehensif dengan menggabungkan multiple ranking algorithms, document clustering, dan advanced query processing. Kombinasi BM25 dengan RRF dan clustering-based boosting menghasilkan sistem pencarian yang lebih akurat dan relevan dibandingkan dengan pendekatan tradisional.
+Sistem Information Retrieval ini berhasil mengimplementasikan pipeline pencarian yang komprehensif dengan menggabungkan multiple ranking algorithms, document clustering, dan advanced query processing. Kombinasi BM25 dengan RRF dan clustering-based relavancy menghasilkan sistem pencarian yang lebih akurat dan relevan dibandingkan dengan pendekatan tradisional.
 
 ### Keunggulan Sistem
 1. **Multi-field Search**: Pencarian simultan di title, abstract, dan keyphrases
