@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Similar Documents - {{ original_doc_id }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Similar Documents</h2>
+            <a href="javascript:history.back()" class="back-btn">← Back</a>
+        </div>
+        
+        <div class="cluster-info">
+            <h3>Cluster Information</h3>
+            <p><strong>Original Document ID:</strong> {{ original_doc_id }}</p>
+            <p><strong>Cluster ID:</strong> {{ cluster_id }}</p>
+            <p><strong>Cluster Size:</strong> {{ cluster_size }} documents</p>
+        </div>
+        
+        <div class="section">
+            <h3 class="section-title">Similar Documents in Cluster</h3>
+            {% if similar_documents %}
+                {% for doc in similar_documents %}
+                <div class="result-item">
+                    <div class="result-header">
+                        <h4 class="result-title">{{ doc.title }}</h4>
+                        <span class="doc-id">ID: {{ doc.id }}</span>
+                    </div>
+                    <div class="result-abstract">
+                        {{ doc.abstract }}
+                    </div>
+                    <div class="result-actions">
+                        <a href="/document/{{ doc.id }}" class="view-doc-btn">View Full Document</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">
+                    <h3>No similar documents found</h3>
+                    <p>This document might be in a cluster by itself.</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="actions">
+            <a href="javascript:history.back()" class="btn">← Back to Results</a>
+            <a href="/" class="btn">🏠 New Search</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -70,7 +70,14 @@
                 
                 <div class="result-actions">
                     <a href="/document/{{ result.id }}" class="view-doc-btn">View Full Document</a>
-                    <span class="doc-id">ID: {{ result.id }}</span>
+                    {% if result.cluster_id is not none %}
+                    <a href="/document/{{ result.id }}/similar" class="view-doc-btn" style="background: #17a2b8;">Similar Docs</a>
+                    {% endif %}
+                    <span class="doc-id">ID: {{ result.id }}
+                    {% if result.cluster_id is not none %}
+                        | Cluster: {{ result.cluster_id }} ({{ result.cluster_size }} docs)
+                    {% endif %}
+                    </span>
                 </div>
             </div>
             {% endfor %}

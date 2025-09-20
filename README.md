@@ -1,15 +1,40 @@
-# Simulasi Mesin Pencari dengan FastAPI
 
-Ini adalah proyek simulasi mesin pencari berbasis web yang saya bangun menggunakan FastAPI. Proyek ini mengimplementasikan algoritma ranking BM25, penggabungan skor dengan Reciprocal Rank Fusion (RRF), serta fitur koreksi salah ketik (typo) secara otomatis.
 
-## Fitur Utama
+Sistem mesin pencari canggih berbasis web yang mengimplementasikan algoritma Information Retrieval modern dengan FastAPI. Proyek ini menggabungkan multiple ranking algorithms, document clustering, typo correction, dan multi-field search untuk menghasilkan hasil pencarian yang akurat dan relevan.
 
-  -  **Pencarian Lanjutan Multi-Field-BM25**: Peringkat relevansi berbasis BM25 yang diterapkan pada beberapa field dokumen (judul, abstrak, kata kunci).
-  -  **Koreksi Typo**: Koreksi kesalahan ketik secara otomatis saat pengguna mencari, menggunakan algoritma Levenshtein Distance.
-  -  **Penggabungan Skor RRF**: Menggabungkan skor relevansi dari setiap field untuk menghasilkan peringkat akhir yang lebih akurat.
-  -  **UI Web Sederhana**: Tampilan UI untuk memudahkan penggunaan.
-  -  **Tampilan Dokumen**: Halaman khusus untuk melihat detail lengkap dari sebuah dokumen.
-  -  **Endpoint API**: Menyediakan RESTful API untuk akses  ke fungsi pencarian.
+## 🎯 Overview Sistem
+
+Sistem ini mengimplementasikan pipeline Information Retrieval yang komprehensif dengan komponen-komponen berikut:
+
+1. **Document Preprocessing Pipeline** - Normalisasi dan pembersihan teks
+2. **Multi-field BM25 Ranking** - Peringkat relevansi berbasis BM25 untuk multiple fields
+3. **Document Clustering** - Pengelompokan dokumen menggunakan K-Means dengan TF-IDF
+4. **Query Processing** - Preprocessing dan koreksi typo otomatis
+5. **Reciprocal Rank Fusion (RRF)** - Penggabungan skor dari multiple ranking systems
+6. **Clustering-based Relevance Boosting** - Peningkatan relevansi berdasarkan cluster similarity
+7. **Web Interface & API** - Antarmuka pengguna dan RESTful API
+
+## 🚀 Fitur Utama
+
+### Core Search Features
+- **Multi-Field BM25 Ranking**: Implementasi BM25 untuk title, abstract, dan keyphrases dengan scoring terpisah
+- **Document Clustering**: Pengelompokan dokumen menggunakan K-Means clustering dengan TF-IDF vectorization
+- **Reciprocal Rank Fusion (RRF)**: Penggabungan skor dari multiple ranking systems untuk hasil yang lebih akurat
+- **Clustering-based Relevance Boosting**: Peningkatan skor relevansi untuk dokumen dalam cluster yang relevan
+- **Automatic Typo Correction**: Koreksi kesalahan ketik menggunakan Levenshtein Distance algorithm
+
+### Advanced Features
+- **Multi-field Search**: Pencarian simultan di title, abstract, dan keyphrases
+- **Similar Document Discovery**: Temukan dokumen serupa berdasarkan cluster membership
+- **Real-time Query Processing**: Processing query dengan preprocessing dan normalization
+- **Comprehensive Statistics**: Monitoring dan analisis performa sistem
+
+### Web Interface & API
+- **Modern Web UI**: Interface pengguna yang responsif dan user-friendly
+- **RESTful API**: Endpoint API lengkap untuk integrasi dengan sistem lain
+- **Document Detail View**: Halaman khusus untuk melihat detail lengkap dokumen
+- **Similar Documents View**: Tampilan dokumen serupa berdasarkan clustering
+- **Real-time Statistics**: Monitoring statistik sistem secara real-time
 
 ## Cara Menjalankan
 

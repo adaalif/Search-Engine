@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine Demo</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Search Engine Demo</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            This is a static demo version that can be deployed to GitHub Pages
+        </p>
+        
+        <form class="search-form" onsubmit="searchDemo(event)">
+            <input type="text" 
+                   id="searchInput"
+                   class="search-input" 
+                   placeholder="Enter search query..."
+                   required>
+            <select id="resultCount" class="results-select">
+                <option value="5">5 results</option>
+                <option value="10" selected>10 results</option>
+                <option value="20">20 results</option>
+            </select>
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+        
+        <div class="stats">
+            <p>Documents: <span>1,000</span> | Vocabulary: <span>8,909</span></p>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Sample data for demo
+        const sampleData = [
+            {
+                id: 1103,
+                title: "New age computing [autonomic computing]",
+                abstract: "Autonomic computing (AC), sometimes called self-managed computing, is the name chosen by IBM to describe the company's new initiative aimed at making computing systems more self-managing, self-configuring, and self-healing. This approach to computing is designed to reduce the complexity of managing computer systems while improving their reliability and performance.",
+                keyphrases: ["new age computing", "autonomic computing", "AC", "self-managed computing", "IBM initiative", "computing reliability", "problem-free computing", "computer speed", "computer memory", "computer crash"],
+                score: 0.041959
+            },
+            {
+                id: 1785,
+                title: "The effect of a male-oriented computer gaming culture on careers in the computer industry",
+                abstract: "If careers in the computer industry were viewed, it would be evident that there is a conspicuous gender gap between the number of male and female employees. This gap is particularly pronounced in technical roles and leadership positions. The male-oriented gaming culture has been identified as one of the contributing factors to this disparity.",
+                keyphrases: ["computer games", "careers", "computer industry", "gender gap", "female employees", "spatial learning", "cognitive processing", "marketing", "male stereotypes"],
+                score: 0.041323
+            },
+            {
+                id: 1733,
+                title: "Computing grid unlocks research",
+                abstract: "Under the UK government's spending review in 2000 the Office of Science and Technology was allocated Pounds 98m to establish a three year e-science research programme. This programme aims to develop the infrastructure and tools needed for large-scale collaborative research across different institutions and disciplines.",
+                keyphrases: ["e-science", "collaboration", "computing resources", "software", "open source prototypes", "middleware", "UK programme", "grid computing", "scientific research"],
+                score: 0.037306
+            },
+            {
+                id: 875,
+                title: "Women of color in computing",
+                abstract: "It is well known that there is a significant underrepresentation of women of color in computing and technology fields. This underrepresentation has been attributed to various factors including systemic barriers, lack of representation, and limited access to resources and opportunities in STEM education.",
+                keyphrases: ["women of color", "computing", "technology fields", "underrepresentation", "systemic barriers", "STEM education", "diversity", "inclusion"],
+                score: 0.036905
+            },
+            {
+                id: 1205,
+                title: "Machine learning applications in healthcare",
+                abstract: "Machine learning is revolutionizing healthcare by enabling predictive analytics, personalized treatment plans, and automated diagnosis. These applications range from medical imaging analysis to drug discovery and patient monitoring systems.",
+                keyphrases: ["machine learning", "healthcare", "predictive analytics", "personalized treatment", "medical imaging", "drug discovery", "patient monitoring", "artificial intelligence"],
+                score: 0.035421
+            }
+        ];
+
+        function searchDemo(event) {
+            event.preventDefault();
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const resultCount = parseInt(document.getElementById('resultCount').value);
+            
+            // Simple search simulation
+            const results = sampleData.filter(item => 
+                item.title.toLowerCase().includes(query) ||
+                item.abstract.toLowerCase().includes(query) ||
+                item.keyphrases.some(kp => kp.toLowerCase().includes(query))
+            ).slice(0, resultCount);
+
+            displayResults(query, results);
+        }
+
+        function displayResults(query, results) {
+            const resultsDiv = document.getElementById('results');
+            
+            if (results.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="no-results">
+                        <h3>No results found</h3>
+                        <p>Try adjusting your search query or check for typos.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="results-summary">
+                    Found <strong>${results.length}</strong> results for "<strong>${query}</strong>"
+                </div>
+            `;
+
+            results.forEach(result => {
+                html += `
+                    <div class="result-item">
+                        <div class="result-header">
+                            <h3 class="result-title">${result.title}</h3>
+                            <span class="result-score">${result.score.toFixed(4)}</span>
+                        </div>
+                        <div class="result-abstract">
+                            ${result.abstract}
+                        </div>
+                        <div class="keyphrases">
+                            <h6>Keyphrases:</h6>
+                            ${result.keyphrases.map(kp => `<span class="keyphrase-tag">${kp}</span>`).join('')}
+                        </div>
+                        <div class="result-actions">
+                            <span class="doc-id">ID: ${result.id}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsDiv.innerHTML = html;
+        }
+
+        // Load stats on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Stats are already hardcoded in HTML
+        });
+    </script>
+</body>
+</html>

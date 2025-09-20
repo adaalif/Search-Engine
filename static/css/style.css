@@ -289,3 +289,26 @@ h3 {
     background: #0056b3;
     color: white;
 }
+
+/* Cluster Info Styles */
+.cluster-info {
+    background: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.cluster-info h3 {
+    color: #1976d2;
+    margin: 0 0 10px 0;
+}
+
+.cluster-info p {
+    margin: 5px 0;
+    color: #333;
+}
+
+.cluster-info strong {
+    color: #1976d2;
+}
