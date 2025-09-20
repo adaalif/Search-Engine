@@ -1,7 +1,3 @@
-
-
-Sistem mesin pencari canggih berbasis web yang mengimplementasikan algoritma Information Retrieval modern dengan FastAPI. Proyek ini menggabungkan multiple ranking algorithms, document clustering, typo correction, dan multi-field search untuk menghasilkan hasil pencarian yang akurat dan relevan.
-
 ## 🎯 Overview Sistem
 
 Sistem ini mengimplementasikan pipeline Information Retrieval yang komprehensif dengan komponen-komponen berikut:
