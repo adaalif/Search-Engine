@@ -94,38 +94,151 @@ curl "http://localhost:8000/document/1103"
 curl "http://localhost:8000/stats"
 ```
 
-## Cara Kerja Algoritma
+## 🔬 Pipeline Information Retrieval
 
-Alur kerja mesin pencari ini dibagi menjadi beberapa tahap:
+Sistem ini mengimplementasikan pipeline Information Retrieval yang komprehensif dengan dua tahap utama: **Tahap Inisialisasi** dan **Tahap Pencarian**.
 
-1.  **Preprocessing Teks**:
+### 📋 Tahap Inisialisasi
 
-      - **Tokenisasi**: Memecah teks menjadi kata-kata menggunakan NLTK.
-      - **Penghapusan Stopword**: Menghapus kata-kata umum yang tidak relevan (contoh: "yang", "di", "dan").
-      - **Stemming**: Mengubah kata ke bentuk dasarnya menggunakan Porter Stemmer.
+#### 1. Pemuatan Dataset
+- **Langkah awal**: Memuat keseluruhan Dataset INSPEC dari repositori Hugging Face ke dalam memori utama
+- **Dataset**: 2000 dokumen ilmiah dengan field title, abstract, dan keyphrases
+- **Format**: Dataset dikonversi ke format list untuk memudahkan processing
 
-2.  **Koreksi Typo**:
+#### 2. Preprocessing Korpus
+Setiap dokumen dalam dataset diproses dengan mengekstrak teks dari tiga field utama:
+- **Title**: Judul dokumen
+- **Keyphrases**: Kata kunci yang terkait
+- **Abstract**: Ringkasan isi dokumen
 
-      - Menggunakan Levenshtein Distance untuk mencari kata terdekat dari kamus internal.
-      - Mengoreksi kata jika jarak perubahannya ≤ 3.
+Teks dari setiap field dinormalisasi secara independen melalui serangkaian prosedur preprocessing standar:
+- **Tokenisasi**: Memecah teks menjadi token menggunakan NLTK word_tokenize
+- **Case Folding**: Konversi semua karakter ke lowercase
+- **Eliminasi Stop Words**: Menghapus kata-kata umum yang tidak relevan (the, and, or, dll)
+- **Stemming**: Mengubah kata ke bentuk dasarnya menggunakan Porter Stemmer
+- **Filtering**: Hanya mempertahankan token yang berupa alfabet
 
-3.  **Skoring dengan BM25**:
+#### 3. Penyusunan Kosakata (Vocabulary)
+- Seluruh token unik yang dihasilkan dari proses preprocessing pada ketiga field dikumpulkan
+- Membentuk satu kosakata (vocabulary) referensi yang komprehensif
+- Kosakata berfungsi sebagai kamus untuk validasi dan koreksi ejaan pada tahap pencarian
 
-      - Terdapat tiga indeks BM25 terpisah untuk *title*, *abstract*, dan *keyphrases*.
-      - Skor relevansi dihitung untuk setiap field secara independen.
+#### 4. Inisialisasi Model Ranking BM25
+Berdasarkan korpus token yang telah diproses, tiga model ranking Okapi BM25 diinisialisasi secara terpisah:
+- **BM25 Title**: Model khusus untuk field title
+- **BM25 Keyphrases**: Model khusus untuk field keyphrases  
+- **BM25 Abstract**: Model khusus untuk field abstract
 
-4.  **Reciprocal Rank Fusion (RRF)**:
+Setiap model dilatih secara spesifik pada data dari field masing-masing, menghasilkan tiga model pemeringkatan yang terspesialisasi.
 
-      - Menggabungkan skor dari ketiga field menggunakan formula RRF.
-      - Dokumen diperingkat ulang berdasarkan skor gabungan untuk hasil akhir.
+#### 5. Persiapan Model Clustering (Vektorisasi TF-IDF)
+Secara paralel, model TF-IDF (Term Frequency-Inverse Document Frequency) dibangun:
+- **Input**: Kombinasi teks dari title + abstract + keyphrases untuk setiap dokumen
+- **Output**: Representasi vektor numerik untuk setiap dokumen
+- **Parameter**: max_features=1000, ngram_range=(1,2), stop_words='english'
+- **Tujuan**: Menghasilkan vektor untuk tahap pengelompokan (clustering)
 
-## Dataset
+#### 6. Document Clustering dengan K-Means
+- **Algoritma**: K-Means clustering dengan TF-IDF vectors sebagai input
+- **Parameter**: n_clusters=10, random_state=42, n_init=10
+- **Output**: Label cluster untuk setiap dokumen
+- **Mapping**: Dibuat mapping cluster-to-documents untuk efisiensi pencarian
+
+### 🔍 Tahap Pencarian
+
+#### 1. Penerimaan dan Koreksi Ejaan Query
+Saat pengguna mengirimkan query:
+- **Validasi Token**: Setiap token divalidasi terhadap kosakata yang telah disusun
+- **Levenshtein Distance**: Jika token tidak ditemukan, algoritma menghitung jarak edit karakter
+- **Koreksi Otomatis**: Token digantikan dengan kata dari kosakata yang memiliki jarak edit terkecil
+- **Threshold**: Koreksi hanya dilakukan jika jarak edit ≤ 3 karakter
+
+#### 2. Preprocessing Query
+Query yang telah melalui koreksi ejaan diproses menggunakan alur preprocessing yang identik dengan dokumen:
+- **Tokenisasi**: Memecah query menjadi token
+- **Case Folding**: Konversi ke lowercase
+- **Stop Word Removal**: Menghapus stop words
+- **Stemming**: Mengubah ke bentuk dasar
+- **Konsistensi**: Menjamin format token query sama dengan token dalam indeks
+
+#### 3. Peringkat Multi-Field
+Token query yang telah diproses digunakan untuk pencarian pada ketiga model BM25:
+- **Title Search**: Pencarian pada indeks title dengan scoring BM25
+- **Keyphrases Search**: Pencarian pada indeks keyphrases dengan scoring BM25
+- **Abstract Search**: Pencarian pada indeks abstract dengan scoring BM25
+- **Independent Ranking**: Setiap model menghasilkan daftar peringkat dokumen secara independen
+
+#### 4. Fusi Peringkat dengan RRF (Reciprocal Rank Fusion)
+Ketiga daftar peringkat digabungkan menggunakan algoritma RRF:
+- **Formula RRF**: `score = 1/(k + rank)` dimana k=60 dan rank adalah posisi dokumen
+- **Score Combination**: Skor final dihitung berdasarkan posisi peringkat, bukan skor mentah BM25
+- **Stability**: Menghasilkan peringkat gabungan yang lebih stabil dan andal
+- **Multi-field Integration**: Menggabungkan relevansi dari ketiga field secara proporsional
+
+#### 5. Clustering-based Relevance Boosting
+- **Cluster Identification**: Mengidentifikasi cluster yang relevan dengan query menggunakan cosine similarity
+- **Threshold**: Cluster dengan similarity > 0.1 dianggap relevan
+- **Boost Factor**: Dokumen dalam cluster relevan mendapat boost 1.2x
+- **Relevance Enhancement**: Meningkatkan skor dokumen yang tematiknya sesuai dengan query
+
+#### 6. Penyajian Hasil
+Hasil pencarian yang telah diperingkat disajikan dengan informasi tambahan:
+- **Ranked Results**: Daftar dokumen yang telah diperingkat berdasarkan skor RRF + clustering boost
+- **Cluster Information**: Label cluster untuk setiap dokumen
+- **Score Details**: Skor relevansi dan informasi cluster
+- **Document Metadata**: Title, abstract, keyphrases, dan ID dokumen
+- **Similar Documents**: Kemampuan untuk menemukan dokumen serupa dalam cluster yang sama
+
+## 📊 Dataset
 
 Mesin pencari ini menggunakan dataset **INSPEC** dari Hugging Face, yang berisi:
 
-  - Dokumen-dokumen ilmiah dengan judul, abstrak, dan kata kunci.
-  - 2000 jumlah dokumen.
-  - Topik seputar ilmu komputer dan teknik.
+- **Jumlah Dokumen**: 2000 dokumen ilmiah
+- **Field Structure**: 
+  - `title`: Judul dokumen
+  - `abstract`: Ringkasan isi dokumen  
+  - `keyphrases`: Array kata kunci yang terkait
+  - `id`: Unique identifier untuk setiap dokumen
+- **Domain**: Topik seputar ilmu komputer dan teknik
+- **Language**: Bahasa Inggris
+- **Source**: Hugging Face Datasets Hub (taln-ls2n/inspec)
+
+## 🏗️ Arsitektur Sistem
+
+### Backend Architecture
+- **Framework**: FastAPI dengan async support
+- **Search Engine**: Custom BM25_RRF_Clustered_SearchEngine class
+- **Clustering**: scikit-learn K-Means dengan TF-IDF vectorization
+- **Text Processing**: NLTK untuk tokenization, stemming, dan stop word removal
+- **Distance Algorithm**: python-Levenshtein untuk typo correction
+
+### Frontend Architecture  
+- **Template Engine**: Jinja2Templates
+- **Static Files**: CSS dan JavaScript untuk UI enhancement
+- **Responsive Design**: Modern web interface yang mobile-friendly
+- **API Integration**: RESTful API endpoints untuk data exchange
+
+### Data Flow
+```
+User Query → Typo Correction → Preprocessing → Multi-field BM25 Search → 
+RRF Score Fusion → Clustering Boost → Ranked Results → Web Display
+```
+
+## 🔧 Konfigurasi Sistem
+
+### Parameter yang Dapat Dikonfigurasi
+- **`top_n`**: Jumlah hasil yang ditampilkan (default: 10)
+- **`k`**: Parameter untuk RRF formula (default: 60)
+- **`n_clusters`**: Jumlah cluster untuk K-Means (default: 10)
+- **`typo_threshold`**: Maksimal jarak edit untuk koreksi typo (default: 3)
+- **`cluster_boost`**: Faktor boost untuk dokumen dalam cluster relevan (default: 1.2)
+- **`similarity_threshold`**: Threshold similarity untuk cluster relevansi (default: 0.1)
+
+### Performance Optimization
+- **Memory Management**: Dataset dimuat ke memori untuk akses cepat
+- **Index Caching**: BM25 indices dan TF-IDF vectors di-cache
+- **Cluster Mapping**: Pre-computed cluster-to-documents mapping
+- **Vocabulary Lookup**: Hash-based vocabulary lookup untuk efisiensi
 
 ## Struktur Proyek
 
