@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple startup script for Search Engine FastAPI
+Startup script for Cluster-then-Search Engine FastAPI
 """
 
 import subprocess
@@ -8,8 +8,8 @@ import sys
 import os
 
 def main():
-    print("🔍 Search Engine FastAPI")
-    print("=" * 30)
+    print("🔍 Cluster-then-Search Information Retrieval Engine")
+    print("=" * 50)
     
     # Check if main.py exists
     if not os.path.exists("main.py"):
@@ -18,8 +18,14 @@ def main():
     
     print("🚀 Starting server...")
     print("🌐 Open: http://localhost:8000")
+    print("📊 Features:")
+    print("   ✅ Typo correction")
+    print("   ✅ Cluster filtering")
+    print("   ✅ Multi-field search (title + abstract)")
+    print("   ✅ RRF ranking")
+    print("   ✅ Dataset selection (CACM, CISI, Inspec)")
     print("⏹️  Press Ctrl+C to stop")
-    print("-" * 30)
+    print("-" * 50)
     
     try:
         # Run the FastAPI server

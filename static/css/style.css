@@ -32,6 +32,90 @@ h3 {
     margin-bottom: 10px;
 }
 
+/* Subtitle */
+.subtitle {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+/* Dataset Selector */
+.dataset-selector {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dataset-selector label {
+    font-weight: bold;
+    color: #333;
+}
+
+.dataset-selector select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+}
+
+.dataset-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.dataset-badge {
+    background: #007bff;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.dataset-info .dataset-info {
+    color: #666;
+    font-size: 14px;
+}
+
+.doc-id-badge {
+    background: #6c757d;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Features */
+.features {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 4px;
+    margin-top: 30px;
+}
+
+.features h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.features li {
+    padding: 5px 0;
+    color: #555;
+}
+
 /* Search Form Styles */
 .search-form {
     display: flex;
@@ -114,6 +198,18 @@ h3 {
 .results-summary {
     color: #666;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-info {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .result-item {
@@ -151,25 +247,6 @@ h3 {
     color: #666;
     line-height: 1.5;
     margin-bottom: 15px;
-}
-
-.keyphrases {
-    margin-bottom: 15px;
-}
-
-.keyphrases h6 {
-    margin: 0 0 10px 0;
-    color: #333;
-}
-
-.keyphrase-tag {
-    background: #e9ecef;
-    color: #495057;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    margin: 2px;
-    display: inline-block;
 }
 
 .result-actions {
@@ -257,20 +334,6 @@ h3 {
     color: #333;
 }
 
-.keyphrases-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.keyphrase-tag {
-    background: #e9ecef;
-    color: #495057;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-}
-
 .actions {
     margin-top: 20px;
     text-align: center;
@@ -311,4 +374,43 @@ h3 {
 
 .cluster-info strong {
     color: #1976d2;
+}
+
+.cluster-explanation {
+    font-style: italic;
+    color: #666;
+    margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .result-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .result-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .dataset-selector {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .results-summary {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

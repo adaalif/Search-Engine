@@ -13,6 +13,11 @@
             <a href="/" class="back-btn">← Back to Search</a>
         </div>
         
+        <!-- Dataset Info -->
+        <div class="dataset-info">
+            <span class="dataset-badge">📊 {{ current_dataset }} Dataset</span>
+        </div>
+        
         <form method="post" action="/search" class="search-form">
             <input type="text" 
                    name="query" 
@@ -28,19 +33,10 @@
             <button type="submit" class="search-btn">Search</button>
         </form>
         
-        <!-- Typo Corrections -->
-        {% if results and results[0].corrections %}
-        <div class="corrections">
-            <h6>Typo Corrections Made:</h6>
-            {% for correction in results[0].corrections %}
-                <span class="correction-badge">{{ correction }}</span>
-            {% endfor %}
-        </div>
-        {% endif %}
-        
         <!-- Results Summary -->
         <div class="results-summary">
             Found <strong>{{ total_results }}</strong> results for "<strong>{{ query }}</strong>"
+            <span class="search-info">🔍 Cluster-then-Search Engine</span>
         </div>
         
         <!-- Search Results -->
@@ -56,18 +52,6 @@
                     {{ result.abstract[:300] }}{% if result.abstract|length > 300 %}...{% endif %}
                 </div>
                 
-                {% if result.keyphrases and result.keyphrases != 'N/A' %}
-                <div class="keyphrases">
-                    <h6>Keyphrases:</h6>
-                    {% for keyphrase in result.keyphrases[:8] %}
-                        <span class="keyphrase-tag">{{ keyphrase }}</span>
-                    {% endfor %}
-                    {% if result.keyphrases|length > 8 %}
-                        <span style="color: #666;">... and {{ result.keyphrases|length - 8 }} more</span>
-                    {% endif %}
-                </div>
-                {% endif %}
-                
                 <div class="result-actions">
                     <a href="/document/{{ result.id }}" class="view-doc-btn">View Full Document</a>
                     {% if result.cluster_id is not none %}
@@ -75,7 +59,7 @@
                     {% endif %}
                     <span class="doc-id">ID: {{ result.id }}
                     {% if result.cluster_id is not none %}
-                        | Cluster: {{ result.cluster_id }} ({{ result.cluster_size }} docs)
+                        | Cluster: {{ result.cluster_id }}
                     {% endif %}
                     </span>
                 </div>

@@ -13,21 +13,17 @@
             <a href="javascript:history.back()" class="back-btn">← Back</a>
         </div>
         
-        <h1 class="doc-title">{{ doc.title }}</h1>
+        <!-- Dataset Info -->
+        <div class="dataset-info">
+            <span class="dataset-badge">📊 {{ current_dataset }} Dataset</span>
+            <span class="doc-id-badge">ID: {{ doc.id }}</span>
+        </div>
         
+        <h1 class="doc-title">{{ doc.title }}</h1>
         
         <div class="section">
             <h3 class="section-title">Abstract</h3>
             <div class="abstract-text">{{ doc.abstract }}</div>
-        </div>
-        
-        <div class="section">
-            <h3 class="section-title">Keyphrases</h3>
-            <div class="keyphrases-container">
-                {% for keyphrase in doc.keyphrases %}
-                    <span class="keyphrase-tag">{{ keyphrase }}</span>
-                {% endfor %}
-            </div>
         </div>
         
         <div class="actions">

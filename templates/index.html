@@ -3,18 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Engine</title>
+    <title>Cluster-then-Search Engine</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>🔍 Search Engine</h1>
+        <h1>🔍 Cluster-then-Search Engine</h1>
+        <p class="subtitle">Advanced Information Retrieval with Clustering</p>
+        
+        <!-- Dataset Selection -->
+        <div class="dataset-selector">
+            <label for="dataset">Current Dataset:</label>
+            <select id="dataset" name="dataset" onchange="switchDataset()">
+                {% for dataset in available_datasets %}
+                <option value="{{ dataset }}" {% if dataset == current_dataset %}selected{% endif %}>
+                    {{ dataset }}
+                </option>
+                {% endfor %}
+            </select>
+            <span class="dataset-info">📊 {{ current_dataset }} dataset loaded</span>
+        </div>
         
         <form method="post" action="/search" class="search-form">
             <input type="text" 
                    name="query" 
                    class="search-input" 
-                   placeholder="Enter search query..."
+                   placeholder="Enter search query (e.g., 'machine learning algorithms')..."
                    required>
             <select name="top_n" class="results-select">
                 <option value="5">5 results</option>
@@ -23,8 +37,43 @@
             </select>
             <button type="submit" class="search-btn">Search</button>
         </form>
+        
+        <div class="features">
+            <h3>🚀 Features</h3>
+            <ul>
+                <li>✅ <strong>Typo Correction</strong> - Automatically fixes spelling mistakes</li>
+                <li>✅ <strong>Cluster Filtering</strong> - Searches only in relevant document clusters</li>
+                <li>✅ <strong>Multi-field Search</strong> - Searches title and abstract separately</li>
+                <li>✅ <strong>RRF Ranking</strong> - Combines results using Reciprocal Rank Fusion</li>
+                <li>✅ <strong>Fast Search</strong> - Only searches within winning cluster</li>
+            </ul>
+        </div>
     </div>
 
     <script src="/static/js/main.js"></script>
+    <script>
+        function switchDataset() {
+            const dataset = document.getElementById('dataset').value;
+            const formData = new FormData();
+            formData.append('dataset', dataset);
+            
+            fetch('/switch_dataset', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error switching dataset: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error switching dataset');
+            });
+        }
+    </script>
 </body>
 </html>

@@ -13,11 +13,19 @@
             <a href="javascript:history.back()" class="back-btn">← Back</a>
         </div>
         
+        <!-- Dataset Info -->
+        <div class="dataset-info">
+            <span class="dataset-badge">📊 {{ current_dataset }} Dataset</span>
+        </div>
+        
         <div class="cluster-info">
-            <h3>Cluster Information</h3>
+            <h3>🎯 Cluster Information</h3>
             <p><strong>Original Document ID:</strong> {{ original_doc_id }}</p>
             <p><strong>Cluster ID:</strong> {{ cluster_id }}</p>
             <p><strong>Cluster Size:</strong> {{ cluster_size }} documents</p>
+            <p class="cluster-explanation">
+                <em>Documents in the same cluster are considered similar based on their content similarity.</em>
+            </p>
         </div>
         
         <div class="section">

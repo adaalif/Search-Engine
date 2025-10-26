@@ -15,10 +15,11 @@ def install_requirements():
 
 def run_server():
     """Run the FastAPI server"""
-    print("🚀 Starting Search Engine server...")
+    print("🚀 Starting Cluster-then-Search Engine server...")
     print("🌐 Open your browser and go to: http://localhost:8000")
+    print("📊 Available datasets: CACM, CISI, Inspec")
     print("⏹️  Press Ctrl+C to stop the server")
-    print("-" * 50)
+    print("-" * 60)
     
     try:
         subprocess.run([sys.executable, "main.py"])
@@ -28,8 +29,8 @@ def run_server():
         print(f"❌ Error running server: {e}")
 
 if __name__ == "__main__":
-    print("🔍 Search Engine FastAPI Simulation")
-    print("=" * 40)
+    print("🔍 Cluster-then-Search Information Retrieval Engine")
+    print("=" * 50)
     
     # Check if requirements.txt exists
     if not os.path.exists("requirements.txt"):
