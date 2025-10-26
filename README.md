@@ -1,357 +1,290 @@
+# Information Retrieval Search Engine with Clustering
 
+## 📖 Overview
 
-Sistem mesin pencari canggih berbasis web yang mengimplementasikan algoritma Information Retrieval modern dengan FastAPI. Proyek ini menggabungkan multiple ranking algorithms, document clustering, typo correction, dan multi-field search untuk menghasilkan hasil pencarian yang akurat dan relevan.
+This project implements a sophisticated **Information Retrieval (IR) Search Engine** that uses clustering to improve search performance. Think of it like a smart library system that not only finds books but also groups similar books together to make searching faster and more accurate.
 
-## 🎯 Overview Sistem
+### What is Information Retrieval?
+Information Retrieval is the science of finding relevant information from large collections of documents. When you search on Google, Bing, or any search engine, you're using IR technology. This project demonstrates how to build such a system from scratch.
 
-Sistem ini mengimplementasikan pipeline Information Retrieval yang komprehensif dengan komponen-komponen berikut:
+## 🎯 What This Project Does
 
-1. **Document Preprocessing Pipeline** - Normalisasi dan pembersihan teks
-2. **Multi-field BM25 Ranking** - Peringkat relevansi berbasis BM25 untuk multiple fields
-3. **Document Clustering** - Pengelompokan dokumen menggunakan K-Means dengan TF-IDF
-4. **Query Processing** - Preprocessing dan koreksi typo otomatis
-5. **Reciprocal Rank Fusion (RRF)** - Penggabungan skor dari multiple ranking systems
-6. **Clustering-based Relevance Boosting** - Peningkatan relevansi berdasarkan cluster similarity
-7. **Web Interface & API** - Antarmuka pengguna dan RESTful API
+### The Problem
+Imagine you have thousands of research papers and you want to find the most relevant ones for your query. A simple approach would be to search through every single document, but this is slow and often returns irrelevant results.
 
-## 🚀 Fitur Utama
+### Our Solution: Cluster-then-Search
+Our system uses a two-phase approach:
 
-### Core Search Features
-- **Multi-Field BM25 Ranking**: Implementasi BM25 untuk title, abstract, dan keyphrases dengan scoring terpisah
-- **Document Clustering**: Pengelompokan dokumen menggunakan K-Means clustering dengan TF-IDF vectorization
-- **Reciprocal Rank Fusion (RRF)**: Penggabungan skor dari multiple ranking systems untuk hasil yang lebih akurat
-- **Clustering-based Relevance Boosting**: Peningkatan skor relevansi untuk dokumen dalam cluster yang relevan
-- **Automatic Typo Correction**: Koreksi kesalahan ketik menggunakan Levenshtein Distance algorithm
+1. **Phase 1 (Offline)**: Organize documents into groups (clusters) of similar content
+2. **Phase 2 (Online)**: When someone searches, only look in the most relevant cluster(s)
 
-### Advanced Features
-- **Multi-field Search**: Pencarian simultan di title, abstract, dan keyphrases
-- **Similar Document Discovery**: Temukan dokumen serupa berdasarkan cluster membership
-- **Real-time Query Processing**: Processing query dengan preprocessing dan normalization
-- **Comprehensive Statistics**: Monitoring dan analisis performa sistem
+This is like organizing a library by subject areas - when you want books about "machine learning," you go directly to the computer science section instead of searching the entire library.
 
-### Web Interface & API
-- **Modern Web UI**: Interface pengguna yang responsif dan user-friendly
-- **RESTful API**: Endpoint API lengkap untuk integrasi dengan sistem lain
-- **Document Detail View**: Halaman khusus untuk melihat detail lengkap dokumen
-- **Similar Documents View**: Tampilan dokumen serupa berdasarkan clustering
-- **Real-time Statistics**: Monitoring statistik sistem secara real-time
+## 🏗️ System Architecture
 
-## Cara Menjalankan
+### Phase 1: Offline Initialization (Setup)
+```
+Documents → Preprocessing → Clustering → BM25 Models → Ready for Search
+```
 
-1.  **Clone atau unduh repositori ini.**
+**What happens here:**
+- **Preprocessing**: Clean and standardize text (remove punctuation, convert to lowercase, etc.)
+- **Clustering**: Group similar documents together using K-Means algorithm
+- **BM25 Models**: Create search models for different document parts (title, abstract, keyphrases)
+- **Vocabulary Building**: Create a word dictionary for typo correction
 
-2.  **Masuk ke direktori proyek:**
+### Phase 2: Online Search (When User Searches)
+```
+Query → Typo Correction → Find Best Cluster → Search in Cluster → Rank Results
+```
 
-    ```bash
-    cd Information retrieaval
-    ```
+**What happens here:**
+- **Typo Correction**: Fix spelling mistakes automatically
+- **Cluster Selection**: Find which cluster is most relevant to the query
+- **Focused Search**: Only search within the selected cluster (much faster!)
+- **Result Ranking**: Combine scores from different document parts using RRF
 
-3.  **Instal semua pustaka yang dibutuhkan:**
+## 🔧 Key Technologies Used
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+### 1. **Text Preprocessing**
+- **Tokenization**: Split text into individual words
+- **Stemming**: Reduce words to their root form (e.g., "running" → "run")
+- **Stop Word Removal**: Remove common words like "the", "and", "is"
 
-4.  **Jalankan server aplikasi:**
+### 2. **Clustering (K-Means)**
+- Groups documents with similar content together
+- Uses TF-IDF vectors to represent document content
+- Creates cluster centroids (center points) for each group
 
-    ```bash
-    # Cara mudah
-    python start.py
+### 3. **BM25 Ranking**
+- A sophisticated algorithm for ranking search results
+- Considers term frequency and document length
+- Separate models for title, abstract, and keyphrases
 
-    # Atau langsung
-    python main.py
-    ```
+### 4. **Reciprocal Rank Fusion (RRF)**
+- Combines rankings from multiple sources
+- Formula: `RRF(d) = Σ 1/(k + rank_i(d))`
+- Ensures balanced consideration of all document parts
 
-5.  **Buka browser** dan akses `http://localhost:8000`.
+### 5. **Typo Correction**
+- Uses Levenshtein distance to find similar words
+- Automatically corrects spelling mistakes in queries
+- Only corrects if the distance is ≤ 2 characters
 
-## Cara Penggunaan
+## 📊 Datasets Used
 
-### Antarmuka Web
+### 1. **CACM Dataset**
+- **Size**: 3,204 documents
+- **Content**: Computer science research papers
+- **Queries**: 64 test queries
+- **Relevance Judgments**: 52 queries with known relevant documents
 
-1.  **Mencari**: Masukkan query Anda pada kotak pencarian yang tersedia.
-2.  **Lihat Hasil**: Hasil pencarian akan ditampilkan dalam daftar yang sudah diperingkat.
-3.  **Lihat Dokumen**: Klik tombol "Lihat Dokumen Lengkap" untuk membaca konten penuh.
-4.  **Statistik**: Cek statistik mesin pencari di halaman utama.
+### 2. **CISI Dataset**
+- **Size**: 1,460 documents
+- **Content**: Information science research papers
+- **Queries**: 112 test queries
+- **Relevance Judgments**: 76 queries with known relevant documents
 
-### Endpoint API
+### 3. **Inspec Dataset (Hugging Face)**
+- **Size**: 2,000 documents
+- **Content**: Computer science abstracts with keyphrases
+- **Purpose**: Initial testing and development
 
-  - `GET /` - Halaman utama.
-  - `POST /search` - Endpoint untuk pencarian via form HTML.
-  - `GET /api/search?query=your_query&top_n=10` - Mendapatkan hasil pencarian dalam format JSON.
-  - `GET /document/{doc_id}` - Mengambil detail dokumen berdasarkan ID.
-  - `GET /stats` - Mengambil data statistik.
+## 📈 Evaluation Metrics
 
-### Contoh Penggunaan API
+We measure our system's performance using standard IR metrics:
 
+### 1. **Precision@10**
+- **What it measures**: Of the top 10 results, how many are actually relevant?
+- **Example**: If 7 out of 10 results are relevant, Precision@10 = 0.7
+
+### 2. **Recall@10**
+- **What it measures**: Of all relevant documents, how many did we find in the top 10?
+- **Example**: If there are 20 relevant documents and we found 8 in top 10, Recall@10 = 0.4
+
+### 3. **F1@10**
+- **What it measures**: Harmonic mean of Precision and Recall
+- **Formula**: F1 = 2 × (Precision × Recall) / (Precision + Recall)
+- **Why useful**: Balances both precision and recall
+
+### 4. **Mean Average Precision (MAP)**
+- **What it measures**: Average precision across all queries
+- **Why important**: Considers the ranking order of results
+
+### 5. **Mean Reciprocal Rank (MRR)**
+- **What it measures**: How quickly we find the first relevant result
+- **Example**: If the first relevant result is at position 3, MRR = 1/3 = 0.33
+
+## 🚀 How to Use This Project
+
+### Prerequisites
 ```bash
-# Mencari dokumen
-curl "http://localhost:8000/api/search?query=computer%20vision&top_n=5"
-
-# Mengambil detail dokumen
-curl "http://localhost:8000/document/1103"
-
-# Mengambil statistik
-curl "http://localhost:8000/stats"
+pip install nltk scikit-learn numpy python-Levenshtein rank-bm25 datasets matplotlib seaborn
 ```
 
-## 🔬 Pipeline Information Retrieval
+### Running the Notebook
+1. Open `cluster-search-clean.ipynb` in Jupyter Notebook
+2. Run cells sequentially from top to bottom
+3. The notebook will:
+   - Load and preprocess datasets
+   - Build the search engine
+   - Run evaluations
+   - Generate visualizations
 
-Sistem ini mengimplementasikan pipeline Information Retrieval yang komprehensif dengan dua tahap utama: **Tahap Inisialisasi** dan **Tahap Pencarian**.
+### Example Search
+```python
+# Initialize the search engine
+engine = ClusterThenSearchEngine(dataset, n_clusters=10)
 
-### 📋 Tahap Inisialisasi
+# Perform a search
+results = engine.search("machine learning algorithms", top_n=5)
 
-#### 1. Pemuatan Dataset
-- **Langkah awal**: Memuat keseluruhan Dataset INSPEC dari repositori Hugging Face ke dalam memori utama
-- **Dataset**: 2000 dokumen ilmiah dengan field title, abstract, dan keyphrases
-- **Format**: Dataset dikonversi ke format list untuk memudahkan processing
-
-#### 2. Preprocessing Korpus
-Setiap dokumen dalam dataset diproses dengan mengekstrak teks dari tiga field utama:
-- **Title**: Judul dokumen
-- **Keyphrases**: Kata kunci yang terkait
-- **Abstract**: Ringkasan isi dokumen
-
-Teks dari setiap field dinormalisasi secara independen melalui serangkaian prosedur preprocessing standar:
-- **Tokenisasi**: Memecah teks menjadi token menggunakan NLTK word_tokenize
-- **Case Folding**: Konversi semua karakter ke lowercase
-- **Eliminasi Stop Words**: Menghapus kata-kata umum yang tidak relevan (the, and, or, dll)
-- **Stemming**: Mengubah kata ke bentuk dasarnya menggunakan Porter Stemmer
-- **Filtering**: Hanya mempertahankan token yang berupa alfabet
-
-#### 3. Penyusunan Kosakata (Vocabulary)
-- Seluruh token unik yang dihasilkan dari proses preprocessing pada ketiga field dikumpulkan
-- Membentuk satu kosakata (vocabulary) referensi yang komprehensif
-- Kosakata berfungsi sebagai kamus untuk validasi dan koreksi ejaan pada tahap pencarian
-
-#### 4. Inisialisasi Model Ranking BM25
-Berdasarkan korpus token yang telah diproses, tiga model ranking Okapi BM25 diinisialisasi secara terpisah:
-- **BM25 Title**: Model khusus untuk field title
-- **BM25 Keyphrases**: Model khusus untuk field keyphrases  
-- **BM25 Abstract**: Model khusus untuk field abstract
-
-Setiap model dilatih secara spesifik pada data dari field masing-masing, menghasilkan tiga model pemeringkatan yang terspesialisasi.
-
-#### 5. Persiapan Model Clustering (Vektorisasi TF-IDF)
-Secara paralel, model TF-IDF (Term Frequency-Inverse Document Frequency) dibangun:
-- **Input**: Kombinasi teks dari title + abstract + keyphrases untuk setiap dokumen
-- **Output**: Representasi vektor numerik untuk setiap dokumen
-- **Parameter**: max_features=1000, ngram_range=(1,2), stop_words='english'
-- **Tujuan**: Menghasilkan vektor untuk tahap pengelompokan (clustering)
-
-#### 6. Document Clustering dengan K-Means
-- **Algoritma**: K-Means clustering dengan TF-IDF vectors sebagai input
-- **Parameter**: n_clusters=10, random_state=42, n_init=10
-- **Output**: Label cluster untuk setiap dokumen
-- **Mapping**: Dibuat mapping cluster-to-documents untuk efisiensi pencarian
-
-### 🔍 Tahap Pencarian
-
-#### 1. Penerimaan dan Koreksi Ejaan Query
-Saat pengguna mengirimkan query:
-- **Validasi Token**: Setiap token divalidasi terhadap kosakata yang telah disusun
-- **Levenshtein Distance**: Jika token tidak ditemukan, algoritma menghitung jarak edit karakter
-- **Koreksi Otomatis**: Token digantikan dengan kata dari kosakata yang memiliki jarak edit terkecil
-- **Threshold**: Koreksi hanya dilakukan jika jarak edit ≤ 3 karakter
-
-#### 2. Preprocessing Query
-Query yang telah melalui koreksi ejaan diproses menggunakan alur preprocessing yang identik dengan dokumen:
-- **Tokenisasi**: Memecah query menjadi token
-- **Case Folding**: Konversi ke lowercase
-- **Stop Word Removal**: Menghapus stop words
-- **Stemming**: Mengubah ke bentuk dasar
-- **Konsistensi**: Menjamin format token query sama dengan token dalam indeks
-
-#### 3. Peringkat Multi-Field
-Token query yang telah diproses digunakan untuk pencarian pada ketiga model BM25:
-- **Title Search**: Pencarian pada indeks title dengan scoring BM25
-- **Keyphrases Search**: Pencarian pada indeks keyphrases dengan scoring BM25
-- **Abstract Search**: Pencarian pada indeks abstract dengan scoring BM25
-- **Independent Ranking**: Setiap model menghasilkan daftar peringkat dokumen secara independen
-
-#### 4. Fusi Peringkat dengan RRF (Reciprocal Rank Fusion)
-Ketiga daftar peringkat digabungkan menggunakan algoritma RRF:
-- **Formula RRF**: `score = 1/(k + rank)` dimana k=60 dan rank adalah posisi dokumen
-- **Score Combination**: Skor final dihitung berdasarkan posisi peringkat, bukan skor mentah BM25
-- **Stability**: Menghasilkan peringkat gabungan yang lebih stabil dan andal
-- **Multi-field Integration**: Menggabungkan relevansi dari ketiga field secara proporsional
-
-#### 5. Clustering-based Relevance Boosting
-- **Cluster Identification**: Mengidentifikasi cluster yang relevan dengan query menggunakan cosine similarity
-- **Threshold**: Cluster dengan similarity > 0.1 dianggap relevan
-- **Boost Factor**: Dokumen dalam cluster relevan mendapat boost 1.2x
-- **Relevance Enhancement**: Meningkatkan skor dokumen yang tematiknya sesuai dengan query
-
-#### 6. Penyajian Hasil
-Hasil pencarian yang telah diperingkat disajikan dengan informasi tambahan:
-- **Ranked Results**: Daftar dokumen yang telah diperingkat berdasarkan skor RRF + clustering boost
-- **Cluster Information**: Label cluster untuk setiap dokumen
-- **Score Details**: Skor relevansi dan informasi cluster
-- **Document Metadata**: Title, abstract, keyphrases, dan ID dokumen
-- **Similar Documents**: Kemampuan untuk menemukan dokumen serupa dalam cluster yang sama
-
-## 📊 Dataset
-
-Mesin pencari ini menggunakan dataset **INSPEC** dari Hugging Face, yang berisi:
-
-- **Jumlah Dokumen**: 2000 dokumen ilmiah
-- **Field Structure**: 
-  - `title`: Judul dokumen
-  - `abstract`: Ringkasan isi dokumen  
-  - `keyphrases`: Array kata kunci yang terkait
-  - `id`: Unique identifier untuk setiap dokumen
-- **Domain**: Topik seputar ilmu komputer dan teknik
-- **Language**: Bahasa Inggris
-- **Source**: Hugging Face Datasets Hub (taln-ls2n/inspec)
-
-## 🏗️ Arsitektur Sistem
-
-### Backend Architecture
-- **Framework**: FastAPI dengan async support
-- **Search Engine**: Custom BM25_RRF_Clustered_SearchEngine class
-- **Clustering**: scikit-learn K-Means dengan TF-IDF vectorization
-- **Text Processing**: NLTK untuk tokenization, stemming, dan stop word removal
-- **Distance Algorithm**: python-Levenshtein untuk typo correction
-
-### Frontend Architecture  
-- **Template Engine**: Jinja2Templates
-- **Static Files**: CSS dan JavaScript untuk UI enhancement
-- **Responsive Design**: Modern web interface yang mobile-friendly
-- **API Integration**: RESTful API endpoints untuk data exchange
-
-### Data Flow
-```
-User Query → Typo Correction → Preprocessing → Multi-field BM25 Search → 
-RRF Score Fusion → Clustering Boost → Ranked Results → Web Display
+# View results
+for doc in results:
+    print(f"Title: {doc['title']}")
+    print(f"Score: {doc['score']}")
+    print(f"Cluster: {doc['cluster_id']}")
 ```
 
-## 🔧 Konfigurasi Sistem
+## 📊 Experimental Results
 
-### Parameter yang Dapat Dikonfigurasi
-- **`top_n`**: Jumlah hasil yang ditampilkan (default: 10)
-- **`k`**: Parameter untuk RRF formula (default: 60)
-- **`n_clusters`**: Jumlah cluster untuk K-Means (default: 10)
-- **`typo_threshold`**: Maksimal jarak edit untuk koreksi typo (default: 3)
-- **`cluster_boost`**: Faktor boost untuk dokumen dalam cluster relevan (default: 1.2)
-- **`similarity_threshold`**: Threshold similarity untuk cluster relevansi (default: 0.1)
+### CACM Dataset Results
+- **Best Performance**: K=2 clusters
+- **MRR**: 0.7694
+- **F1@10**: 0.2494
+- **MAP**: 0.2234
 
-### Performance Optimization
-- **Memory Management**: Dataset dimuat ke memori untuk akses cepat
-- **Index Caching**: BM25 indices dan TF-IDF vectors di-cache
-- **Cluster Mapping**: Pre-computed cluster-to-documents mapping
-- **Vocabulary Lookup**: Hash-based vocabulary lookup untuk efisiensi
+### CISI Dataset Results
+- **Best Performance**: Varies by metric
+- **MRR**: ~0.5850
+- **F1@10**: ~0.1240
+- **MAP**: ~0.0651
 
-## Struktur Proyek
+### Key Findings
+1. **Optimal Cluster Count**: Different datasets perform best with different numbers of clusters
+2. **CACM vs CISI**: CACM generally performs better, possibly due to dataset characteristics
+3. **Cluster Impact**: Clustering significantly improves search efficiency and often improves relevance
 
-```
-Information retrieaval/
-├── main.py             # Aplikasi utama FastAPI
-├── start.py            # Skrip sederhana untuk menjalankan
-├── requirements.txt    # Daftar dependensi Python
-├── README.md           # Dokumentasi ini
-├── templates/          # Template HTML
-│   ├── index.html
-│   ├── search_results.html
-│   └── document.html
-└── static/             # File statis (CSS, JS)
-    ├── css/
-    │   └── style.css
-    └── js/
-        └── main.js
-```
+## 🔍 Understanding the Code Structure
 
-## 📈 Evaluasi dan Analisis Performa
+### Main Classes
 
-### Metrik Evaluasi
-- **Precision@K**: Akurasi hasil pencarian pada K dokumen teratas
-- **Recall**: Kemampuan sistem menemukan dokumen relevan
-- **F1-Score**: Harmonic mean dari precision dan recall
-- **Silhouette Score**: Kualitas clustering (range: -1 to 1, higher is better)
-- **Query Response Time**: Waktu rata-rata untuk memproses query
+#### `ClusterThenSearchEngine`
+The main search engine class that implements the two-phase approach.
 
-### Analisis Clustering
-- **Cluster Distribution**: Analisis distribusi dokumen dalam setiap cluster
-- **Cluster Coherence**: Konsistensi tematik dalam setiap cluster
-- **Inter-cluster Similarity**: Kemiripan antar cluster
-- **Intra-cluster Similarity**: Kemiripan dalam cluster
+**Key Methods:**
+- `__init__()`: Phase 1 - Builds all models offline
+- `search()`: Phase 2 - Performs online search
+- `_correct_typos()`: Handles spelling mistakes
+- `_find_winning_cluster()`: Selects most relevant cluster
+- `_rank_within_cluster()`: Ranks documents in selected cluster
 
-### Benchmarking
-- **Baseline Comparison**: Perbandingan dengan pencarian tanpa clustering
-- **RRF Effectiveness**: Analisis efektivitas Reciprocal Rank Fusion
-- **Typo Correction Accuracy**: Akurasi koreksi kesalahan ketik
-- **Multi-field Integration**: Kontribusi setiap field terhadap relevansi
+### Key Functions
 
-## 🔬 Detail Teknis
+#### `preprocess(text)`
+Cleans and standardizes text for processing.
 
-### Core Algorithms
-- **BM25 Ranking**: Okapi BM25 dengan parameter k1=1.2, b=0.75
-- **Reciprocal Rank Fusion**: Formula `score = 1/(k + rank)` dengan k=60
-- **K-Means Clustering**: Euclidean distance dengan random initialization
-- **TF-IDF Vectorization**: Term frequency-inverse document frequency weighting
-- **Levenshtein Distance**: Edit distance untuk typo correction
+#### `evaluate_search()`
+Runs comprehensive evaluation using multiple metrics.
 
-### Dependencies
-- **Framework**: FastAPI dengan template Jinja2
-- **Machine Learning**: scikit-learn untuk clustering dan vectorization
-- **NLP Processing**: NLTK untuk text preprocessing
-- **Distance Calculation**: python-Levenshtein untuk typo correction
-- **BM25 Implementation**: rank-bm25 untuk ranking algorithm
-- **Data Source**: Hugging Face datasets untuk corpus
+#### `visualize_clusters()`
+Creates visualizations of cluster distributions and performance.
 
-## Konfigurasi
+## 🎓 Learning Outcomes
 
-Beberapa parameter bisa diubah langsung di dalam kode `main.py`:
+After studying this project, you'll understand:
 
-  - `top_n`: Jumlah hasil yang ditampilkan (default: 10).
-  - `k`: Parameter untuk RRF (default: 60).
-  - Batas jarak untuk koreksi typo (default: ≤ 3).
+1. **Information Retrieval Fundamentals**
+   - How search engines work
+   - Document preprocessing techniques
+   - Ranking algorithms (BM25, RRF)
 
-## Penyelesaian Masalah (Troubleshooting)
+2. **Machine Learning Applications**
+   - Clustering algorithms (K-Means)
+   - Feature extraction (TF-IDF)
+   - Similarity measures (cosine similarity)
 
-1.  **Gagal Memuat Dataset**: Aplikasi akan mengunduh dataset saat pertama kali dijalankan. Pastikan Anda memiliki koneksi internet yang stabil.
+3. **Evaluation Methods**
+   - Standard IR metrics
+   - Experimental design
+   - Performance analysis
 
-2.  **Masalah Memori**: Dataset dimuat ke dalam memori. Untuk dataset yang jauh lebih besar, pertimbangkan untuk implementasi *lazy loading*.
+4. **System Design**
+   - Two-phase architecture
+   - Efficiency vs. accuracy trade-offs
+   - Scalability considerations
 
-3.  **Konflik Port**: Jika port 8000 sudah digunakan, ubah port di file `main.py`:
+## 🔬 Advanced Features
 
-    ```python
-    uvicorn.run(app, host="0.0.0.0", port=8001)
-    ```
+### 1. **Typo Correction**
+- Automatically fixes spelling mistakes
+- Uses edit distance algorithms
+- Improves user experience
 
-## 🎯 Kesimpulan
+### 2. **Multi-field Search**
+- Searches title, abstract, and keyphrases separately
+- Combines results using RRF
+- More comprehensive than single-field search
 
-Sistem Information Retrieval ini berhasil mengimplementasikan pipeline pencarian yang komprehensif dengan menggabungkan multiple ranking algorithms, document clustering, dan advanced query processing. Kombinasi BM25 dengan RRF dan clustering-based boosting menghasilkan sistem pencarian yang lebih akurat dan relevan dibandingkan dengan pendekatan tradisional.
+### 3. **Cluster Filtering**
+- Reduces search space dramatically
+- Improves both speed and relevance
+- Adaptive to query content
 
-### Keunggulan Sistem
-1. **Multi-field Search**: Pencarian simultan di title, abstract, dan keyphrases
-2. **Intelligent Ranking**: RRF menggabungkan skor dari multiple ranking systems
-3. **Document Clustering**: Pengelompokan dokumen untuk meningkatkan relevansi
-4. **Typo Tolerance**: Koreksi otomatis kesalahan ketik pengguna
-5. **Scalable Architecture**: Arsitektur yang dapat dikembangkan untuk dataset yang lebih besar
+### 4. **Comprehensive Evaluation**
+- Tests multiple cluster configurations
+- Compares different datasets
+- Provides detailed performance analysis
 
-### Potensi Pengembangan
-- **Query Expansion**: Penambahan sinonim dan related terms
-- **Learning to Rank**: Implementasi machine learning untuk ranking
-- **Real-time Clustering**: Update cluster secara real-time
-- **Multi-language Support**: Dukungan untuk multiple bahasa
-- **Advanced Analytics**: Dashboard analisis performa sistem
+## 🚧 Future Improvements
 
-## 📚 Referensi
+### Potential Enhancements
+1. **Dynamic Clustering**: Update clusters as new documents are added
+2. **Query Expansion**: Add related terms to improve recall
+3. **Learning to Rank**: Use machine learning to improve ranking
+4. **Real-time Updates**: Support for live document collections
+5. **Multi-language Support**: Extend to non-English documents
+
+### Performance Optimizations
+1. **Indexing**: Use inverted indexes for faster retrieval
+2. **Caching**: Cache frequent queries and results
+3. **Parallel Processing**: Distribute computation across multiple cores
+4. **Memory Management**: Optimize for large document collections
+
+## 📚 References and Further Reading
 
 ### Academic Papers
-- Robertson, S., & Zaragoza, H. (2009). The probabilistic relevance framework: BM25 and beyond. *Foundations and Trends in Information Retrieval*, 3(4), 333-389.
-- Cormack, G. V., Clarke, C. L., & Buettcher, S. (2009). Reciprocal rank fusion outperforms condorcet and individual rank learning methods. *Proceedings of the 32nd international ACM SIGIR conference on Research and development in information retrieval*.
-- MacQueen, J. (1967). Some methods for classification and analysis of multivariate observations. *Proceedings of the fifth Berkeley symposium on mathematical statistics and probability*.
+- Robertson, S. E., & Jones, K. S. (1976). Relevance weighting of search terms
+- Cormack, G. V., Clarke, C. L., & Buettcher, S. (2009). Reciprocal rank fusion outperforms condorcet and individual rank learning methods
 
-### Technical Documentation
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [scikit-learn Clustering](https://scikit-learn.org/stable/modules/clustering.html)
-- [NLTK Documentation](https://www.nltk.org/)
-- [Hugging Face Datasets](https://huggingface.co/docs/datasets/)
+### Books
+- Manning, C. D., Raghavan, P., & Schütze, H. (2008). Introduction to Information Retrieval
+- Croft, W. B., Metzler, D., & Strohman, T. (2010). Search Engines: Information Retrieval in Practice
 
-## 📄 Lisensi
+### Online Resources
+- [Information Retrieval Course](https://web.stanford.edu/class/cs276/)
+- [BM25 Algorithm Explanation](https://en.wikipedia.org/wiki/Okapi_BM25)
+- [K-Means Clustering](https://scikit-learn.org/stable/modules/clustering.html#k-means)
 
-Proyek ini dibuat untuk tujuan edukasi dan penelitian. Dataset INSPEC digunakan di bawah lisensi masing-masing. Kode sumber tersedia untuk pembelajaran dan pengembangan lebih lanjut.
+## 🤝 Contributing
+
+This project is designed for educational purposes. Feel free to:
+- Experiment with different clustering algorithms
+- Try other ranking methods
+- Test on different datasets
+- Improve the evaluation metrics
+- Add new features
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 🙏 Acknowledgments
+
+- **Datasets**: CACM and CISI datasets from standard IR test collections
+- **Libraries**: NLTK, scikit-learn, rank-bm25, and other open-source tools
+- **Community**: Information retrieval research community for established methods and metrics
 
 ---
 
-**Dibuat dengan ❤️ untuk pembelajaran Information Retrieval dan Machine Learning**
+**Note**: This project is designed for educational purposes to demonstrate information retrieval concepts. For production use, additional considerations like scalability, security, and robustness would be necessary.
